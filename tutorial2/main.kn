@@ -1,0 +1,19 @@
+var wndMain: wnd@Wnd
+var btnDice: wnd@Btn
+ 
+func main()
+  do @wndMain :: wnd@makeWnd(null, %normal, 800, 450, "Title")
+  do @btnDice :: wnd@makeBtn(@wndMain, 12, 12, 185, 23, %fix, %fix, "サイコロを振る")
+  do @btnDice.onPush :: @btnDiceOnPush
+ 
+  while(wnd@act())
+  end while
+end func
+ 
+func btnDiceOnPush(sender: wnd@Btn)
+  var msg: []char :: ""
+  for(1, 10)
+    do msg :: msg ~ lib@rnd(1, 6).toStr() ~ "\n"
+  end for
+  do wnd@msgBox(@wndMain, msg, "サイコロの結果", %info, %ok)
+end func
