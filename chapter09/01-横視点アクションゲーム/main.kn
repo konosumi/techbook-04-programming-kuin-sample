@@ -1,0 +1,100 @@
+{ 横視点アクションゲーム }
+
+class Player(game@Rect)
+    +var toRight: bool
+end class
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+var texBack: draw@Tex
+var texPlayer: draw@Tex
+var player: @Player
+var texMap: draw@Tex
+var map: game@Map
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    do @texBack :: draw@makeTex("res/dot_back_side.png")
+    do @texPlayer :: draw@makeTex("res/dot_kuina_chan.png")
+    do @texMap :: draw@makeTex("res/dot_map_chips_side.png")
+    do @map :: game@makeMap("res/map_sample_side.txt", 64.0, 64.0)
+
+    do @player :: #@Player
+    do @player.x :: 96.0
+    do @player.y :: 800.0
+    do @player.width :: 46.0
+    do @player.height :: 116.0
+    do @player.toRight :: true
+    do draw@sampler(%point)
+
+    var pattern: []float :: [0.0, 64.0, 0.0, 128.0]
+    
+    while(wnd@act())
+        do @texBack.drawScale(0.0, 0.0, 1600.0, 900.0,
+        |0.0, 0.0, 800.0, 450.0, draw@white)
+        
+        if(input@pad(0, %left) >= 1)
+            do @player.veloX :- 0.8
+            do @player.toRight :: false
+        end if
+        
+        if(input@pad(0, %right) >= 1)
+            do @player.veloX :+ 0.8
+            do @player.toRight :: true
+        end if
+        
+        if(input@pad(0, %a) >= 1 &
+        |input@pad(0, %a) <= 6 & @player.hitBottom())
+            do @player.veloY :: -14.0
+        end if
+        
+        do @player.veloY :+ 0.4
+        
+        do @player.veloX :: @player.veloX.clamp(-8.0, 8.0)
+        do @player.veloY :: @player.veloY.clamp(-14.0, 14.0)
+        
+        do @player.move(0.0)
+        do game@hitMapRect(@map, @player, getChipInfo, null)
+        do @player.update()
+        
+        func getChipInfo(chip: int, info: game@ChipInfo)
+            switch(chip)
+            case lib@intMin to - 1
+                do info.shape :: %none
+            case 0, 1
+                do info.shape :: %rect
+                do info.solidFriction :: 0.2
+            case 2
+                do info.shape :: %triLeftTop
+                do info.solidFriction :: 0.1
+            case 6
+                do info.shape :: %rect
+                do info.solidFriction :: 0.0
+            case 7
+                do info.shape :: %rect
+                do info.solidFriction :: 0.2
+                do info.repulsion :: 0.95
+            end switch
+            do info.fluidFriction :: 0.98
+        end func
+        
+        do @texPlayer.drawScale(@player.x - 64.0, @player.y - 64.0,
+        |128.0, 128.0, pattern[draw@cnt() / 12 % 4],
+        |@player.toRight ?(128.0, 0.0), 64.0, 64.0, draw@white)
+
+        for y(0, 14)
+            for x(0, 25)
+                var chip: int :: @map.get(x, y)
+                if(chip >= 0)
+                    do @texMap.drawScale(x $ float * 64.0 - 32.0,
+                    |y $ float * 64.0 - 32.0, 64.0, 64.0,
+                    |chip $ float * 32.0, 0.0, 32.0, 32.0, draw@white)
+                end if
+            end for
+        end for
+
+        do draw@render(60)
+    end while
+end func
