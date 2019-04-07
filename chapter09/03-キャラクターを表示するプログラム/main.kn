@@ -1,0 +1,34 @@
+{ キャラクターを表示するプログラム }
+
+class Player(game@Rect)
+    +var toRight: bool
+end class
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+; [追加]プレイヤーのテクスチャとインスタンス
+var texPlayer: draw@Tex
+var player: @Player
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    ; [追加]プレイヤー画像の読み込み
+    do @texPlayer :: draw@makeTex("res/dot_kuina_chan.png")
+    ; [追加]プレイヤークラスの作成と位置やサイズの初期設定
+    do @player :: #@Player
+    do @player.x :: 96.0
+    do @player.y :: 800.0
+    do @player.width :: 46.0
+    do @player.height :: 116.0
+    do @player.toRight :: true
+    
+    while(wnd@act())
+        ; [追加]プレイヤーキャラクターの描画
+        do @texPlayer.drawScale(@player.x - 64.0, @player.y - 64.0,
+        |128.0, 128.0, 0.0, 0.0, 64.0, 64.0, draw@white)
+        do draw@render(60)
+    end while
+end func
