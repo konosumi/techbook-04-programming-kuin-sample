@@ -1,3 +1,5 @@
+{ 関数とブロックの例 }
+
 ; funcからend funcまでが関数ブロックです
 func main()
     var i: int :: 1

@@ -1,0 +1,9 @@
+{ 同じスコープ内であれば、@は不要になる }
+
+func main()
+    var wndMain: wnd@Wnd
+    do wndMain :: wnd@makeWnd(null, %normal, 800, 450, "Title")
+
+    while(wnd@act())
+    end while
+end func
