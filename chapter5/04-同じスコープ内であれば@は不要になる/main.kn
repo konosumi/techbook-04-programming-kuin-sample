@@ -2,6 +2,8 @@
 
 func main()
     var wndMain: wnd@Wnd
+    ; wndMainは同じ関数内で定義されているため
+    ; 「@wndMain」でグローバルスコープを見る必要がありません
     do wndMain :: wnd@makeWnd(null, %normal, 800, 450, "Title")
 
     while(wnd@act())

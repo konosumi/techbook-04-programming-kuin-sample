@@ -1,0 +1,16 @@
+{ 基本ブロックを利用した、変数スコープの限定 }
+
+func main()
+    ; blockは、何もしないブロックです
+    ; スコープを分けたり、breakで抜ける用途に使われます
+    block
+        var i: int :: 10
+        ; ブロック内であれば変数を参照できる
+        ; なお「dbg@print」は、Kuinエディタのログに文字列を出力する関数です
+        do dbg@print(i.toStr())
+    end block
+
+    ; ブロックの外では変数を参照できないので、コンパイルエラーになる
+    ; EA0000: 識別子「i」の定義が見つかりません。
+    do dbg@print(i.toStr())
+end func
