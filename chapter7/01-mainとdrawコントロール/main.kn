@@ -1,0 +1,17 @@
+{ mainとdrawコントロール }
+
+var wndMain: wnd@Wnd
+; mainと空のウインドウから追加
+var drawMain: wnd@Draw
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    ; mainと空のウインドウから追加
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+
+    while(wnd@act())
+        ; mainと空のウインドウから追加
+        do draw@render(60)
+    end while
+end func
