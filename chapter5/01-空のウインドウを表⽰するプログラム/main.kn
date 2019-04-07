@@ -1,3 +1,4 @@
+{ 空のウインドウを表⽰するプログラム }
 var wndMain: wnd@Wnd
 
 func main()
