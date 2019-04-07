@@ -1,0 +1,65 @@
+{ 簡単なミニゲーム }
+
+class Pos()
+    +var x: float
+    +var y: float
+    +var veloX: float
+    +var veloY: float
+end class
+
+var player: @Pos
+var enemy: @Pos
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    do @player :: #@Pos
+    do @player.x :: 400.0
+    do @player.y :: 800.0
+
+    do @enemy :: #@Pos
+    do @enemy.x :: 1500.0
+    do @enemy.y :: 800.0
+    do @enemy.veloX :: -10.0
+    
+    while(wnd@act())
+        if(lib@dist(@enemy.x, @enemy.y,
+        |@player.x, @player.y) < 50.0 + 40.0)
+            do draw@rect(0.0, 0.0, 1600.0, 900.0, 0xFFCC3333)
+            do draw@circle(@player.x, @player.y,
+            |50.0, 50.0, 0xFFFFFF00)
+            do draw@circle(@enemy.x, @enemy.y,
+            |40.0, 40.0, 0xFFFF0000)
+
+            do draw@render(0)
+            do lib@sleep(800)
+            do @wndMain.close()
+        end if
+        
+        do @enemy.x :+ @enemy.veloX
+        if(@enemy.x < -40.0)
+            do @enemy.x :: 1640.0
+            do @enemy.veloX :: -lib@rndFloat(6.0, 50.0)
+        end if
+        
+        do @player.veloY :+ 1.0
+        do @player.y :+ @player.veloY
+        if(@player.y > 800.0)
+            do @player.y :: 800.0
+            do @player.veloY :: 0.0
+        end if
+        
+        if(input@pad(0, %a) = 1 & @player.y = 800.0)
+            do @player.veloY :: -20.0
+        end if
+        
+        do draw@circle(@player.x, @player.y, 50.0, 50.0, 0xFFFFFF00)
+        do draw@circle(@enemy.x, @enemy.y, 40.0, 40.0, 0xFFFF0000)
+        
+        do draw@render(60)
+    end while
+end func
