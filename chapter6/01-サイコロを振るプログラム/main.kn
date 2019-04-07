@@ -1,0 +1,27 @@
+{ サイコロを振るプログラム }
+
+var wndMain: wnd@Wnd
+; [基本形から追加]ボタン変数の宣言
+var btnDice: wnd@Btn
+ 
+func main()
+  do @wndMain :: wnd@makeWnd(null, %normal, 800, 450, "Title")
+
+  ; [基本形から追加]ボタンの作成
+  do @btnDice :: wnd@makeBtn(@wndMain, 12, 12, 185, 23,
+  |%fix, %fix, "サイコロを振る")
+  ; [基本形から追加]ボタンが押された時に発動する関数(処理)の登録
+  do @btnDice.onPush :: @btnDiceOnPush
+ 
+  while(wnd@act())
+  end while
+end func
+ 
+; [基本形から追加]サイコロを振る関数
+func btnDiceOnPush(sender: wnd@Btn)
+  var msg: []char :: ""
+  for(1, 10)
+    do msg :: msg ~ lib@rnd(1, 6).toStr() ~ "\n"
+  end for
+  do wnd@msgBox(@wndMain, msg, "サイコロの結果", %info, %ok)
+end func
