@@ -1,0 +1,39 @@
+{ マップを描画するプログラム }
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+var texBack: draw@Tex
+
+; [追加]マップ情報を保存する変数
+var texMap: draw@Tex
+var map: game@Map
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    do @texBack :: draw@makeTex("res/dot_back_side.png")
+    
+    ; [追加]マップ画像とマップ情報を読み込む
+    do @texMap :: draw@makeTex("res/dot_map_chips_side.png")
+    do @map :: game@makeMap("res/map_sample_side.txt", 64.0, 64.0)
+    
+    while(wnd@act())
+        do @texBack.drawScale(0.0, 0.0, 1600.0, 900.0,
+        |0.0, 0.0, 800.0, 450.0, draw@white)
+        
+        ; [追加]マップを描画する
+        for y(0, 14)
+            for x(0, 25)
+                var chip: int :: @map.get(x, y)
+                if(chip >= 0)
+                    do @texMap.drawScale(x $ float * 64.0 - 32.0,
+                    |y $ float * 64.0 - 32.0, 64.0, 64.0,
+                    |chip $ float * 32.0, 0.0, 32.0, 32.0, draw@white)
+                end if
+            end for
+        end for
+        
+        do draw@render(60)
+    end while
+end func
