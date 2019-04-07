@@ -1,0 +1,35 @@
+{ superによる継承関数の呼び出し }
+
+class Pos()
+    +var x: float
+    +var y: float
+    
+    *func ctor()
+        do me.x :: 0.0
+        do dbg@print("Pos X: " ~ me.x.toStr() ~ "\n")
+    end func
+end class
+
+class Player(@Pos)
+    *func ctor()
+        ; 親クラスの同名関数(今回ならコンストラクタ)を呼び出す
+        do super(me)
+
+        do me.x :: 400.0
+        do dbg@print("Pleyer X: " ~ me.x.toStr() ~ "\n")
+    end func
+end class
+
+class Enemy(@Pos)
+    *func ctor()
+        do super(me)
+
+        do me.x :: 1500.0
+        do dbg@print("Enemy X: " ~ me.x.toStr() ~ "\n")
+    end func
+end class
+
+func main()
+    var player: @Player :: #@Player
+    var enemy: @Enemy :: #@Enemy
+end func

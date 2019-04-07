@@ -1,0 +1,33 @@
+{ クラスのコンストラクタ }
+
+class Pos()
+    +var x: float
+    +var y: float
+end class
+
+class Player(@Pos)
+    ; プレイヤーのコンストラクタ
+    *func ctor()
+        do me.x :: 400.0
+        do me.y :: 800.0
+    end func
+end class
+
+class Enemy(@Pos)
+    ; エネミーのコンストラクタ
+    *func ctor()
+        do me.x :: 1500.0
+        do me.y :: 800.0
+    end func
+end class
+
+func main()
+    var player: @Player :: #@Player
+    var enemy: @Enemy :: #@Enemy
+
+    ; それぞれの位置をログに出力する
+    do dbg@print("Player X: " ~ player.x.toStr()
+    |~ " Y: " ~ player.y.toStr() ~ "\n")
+    do dbg@print("Enemy X: " ~ enemy.x.toStr()
+    |~ " Y: " ~ enemy.y.toStr() ~ "\n")
+end func

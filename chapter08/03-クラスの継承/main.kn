@@ -1,0 +1,29 @@
+{ クラスの継承 }
+
+class Pos()
+    +var x: float
+    +var y: float
+    +var veloX: float
+    +var veloY: float
+end class
+
+; Posに攻撃力を追加したプレイヤークラス
+class Player(@Pos)
+    +var attack: int
+end class
+; Posに体力を追加したエネミークラス
+class Enemy(@Pos)
+    +var hp: int
+end class
+
+func main()
+    var player: @Player :: #@Player
+    do player.x :: 400.0
+    do player.y :: 800.0
+    do player.attack :: 10
+
+    var enemy: @Enemy :: #@Enemy
+    do enemy.x :: 1500.0
+    do enemy.y :: 800.0
+    do enemy.hp :: 50
+end func

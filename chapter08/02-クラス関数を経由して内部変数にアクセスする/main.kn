@@ -1,0 +1,38 @@
+{ クラス関数を経由して、内部変数にアクセスする }
+
+class Counter()
+    ; 外部に公開されていない内部変数
+    var cnt: int
+    
+    ; 外部に公開されているクラス関数
+    +func reset()
+        ; cntを0にリセットする
+        do me.cnt :: 0
+    end func
+    +func addCnt()
+        ; cntを加算する
+        do me.cnt :: me.cnt + 1
+    end func
+    +func dbgCnt()
+        ; cntをログに出力する
+        do dbg@print(me.strCnt())
+    end func
+    
+    ; 外部に公開されていない内部関数
+    func strCnt(): []char
+        ; 内部変数のcntを文字列に変換して返す
+        ret me.cnt.toStr()
+    end func
+end class
+
+var wndMain: wnd@Wnd
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    
+    var counter: @Counter :: #@Counter
+    ; 「+」が付いている公開関数を使って、「cnt」を操作しています。
+    do counter.reset()
+    do counter.addCnt()
+    do counter.dbgCnt()
+end func
