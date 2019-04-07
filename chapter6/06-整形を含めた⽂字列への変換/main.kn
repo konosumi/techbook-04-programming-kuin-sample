@@ -1,0 +1,7 @@
+{ 整形を含めた⽂字列への変換 }
+
+func main()
+    var i: int :: 123
+    ; 000123と表示されます
+    do dbg@print(i.toStrFmt("06d"))
+end func

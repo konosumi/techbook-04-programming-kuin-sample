@@ -1,0 +1,11 @@
+{ Kuinの配列 }
+
+func main()
+    ; 真偽値型の配列
+    var i: []bool :: [true, false, true]
+    ; 少数(浮動小数点)型の配列
+    var j: []float :: [1.1, 2.22, 3.33]
+
+    ; 数値を持つ2次元配列
+    var k: [][]int :: [[1, 2, 3], [4, 5]]
+end func

@@ -1,0 +1,8 @@
+{ 文字列から数値への変換 }
+
+func main()
+    ; existedには、変換に成功したかどうかの結果が入ります
+    var existed: bool
+    do "123".toInt(&existed)
+    do ['1', '2', '3'].toFloat(&existed)
+end func

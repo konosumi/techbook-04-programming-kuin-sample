@@ -1,0 +1,41 @@
+{ チェックボックスとラジオボタンの活用 }
+
+var wndMain: wnd@Wnd
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %normal, 800, 450, "Title")
+    
+    ; チェックボックス
+    var wndChk: wnd@Chk :: wnd@makeChk(@wndMain, 12, 12, 185, 23,
+    |%fix, %fix, "チェックボックス")
+    do wndChk.onPush :: @onPushChk
+    
+    ; ラジオボタン
+    var wndRadio1: wnd@Radio :: wnd@makeRadio(@wndMain, 12, 36,
+    |185, 23, %fix, %fix, "ラジオボタン1")
+    do wndRadio1.onPush :: @onPushRadio
+    
+    var wndRadio2: wnd@Radio :: wnd@makeRadio(@wndMain, 12, 60,
+    |185, 23, %fix, %fix, "ラジオボタン2")
+    do wndRadio2.onPush :: @onPushRadio
+
+    while(wnd@act())
+    end while
+end func
+
+; チェックボックスが押された時に発動する関数
+func onPushChk(sender: wnd@Chk)
+    if(sender.getChk())
+        do wnd@msgBox(@wndMain, sender.getText() ~ "が選択された",
+        |"ボタンが押された", %info, %ok)
+    else
+        do wnd@msgBox(@wndMain, sender.getText() ~ "が解除された",
+        |"ボタンが押された", %info, %ok)
+    end if
+end func
+
+; ラジオボタンが押された時に発動する関数
+func onPushRadio(sender: wnd@Radio)
+    do wnd@msgBox(@wndMain, sender.getText() ~ "が押された",
+    |"ボタンが押された", %info, %ok)
+end func
