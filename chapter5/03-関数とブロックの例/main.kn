@@ -1,0 +1,17 @@
+; funcからend funcまでが関数ブロックです
+func main()
+    var i: int :: 1
+
+    ; whileからend whileまでがwhileブロックです
+    while(i < 100)
+        ; if からend ifまでがifブロックです
+        if(i % 2 = 0)
+            ; iを2で割った余りが0なら、"iは偶数です(改行)"とログに出す
+            do dbg@print("iは偶数です\n")
+        end if
+
+        ; iに1を足す
+        ; whileの条件によって、iが100になるまでループが続きます
+        do i :+ 1
+    end while
+end func
