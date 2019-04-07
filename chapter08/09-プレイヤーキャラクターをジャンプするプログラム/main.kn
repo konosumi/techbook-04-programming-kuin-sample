@@ -1,0 +1,51 @@
+{ プレイヤーキャラクターをジャンプするプログラム }
+
+class Pos()
+    +var x: float
+    +var y: float
+    +var veloX: float
+    +var veloY: float
+end class
+
+var player: @Pos
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    do @player :: #@Pos
+    ; プレイヤーキャラクターの初期位置
+    do @player.x :: 400.0
+    do @player.y :: 800.0
+    
+    while(wnd@act())
+        ; プレイヤーキャラクターの縦方向の速度(重力)を1増やす
+        ; つまり、ジャンプ力を1低下させます
+        do @player.veloY :+ 1.0
+        
+        ; 1フレーム毎に、縦方向の速度だけプレイヤーを移動する
+        do @player.y :+ @player.veloY
+        
+        ; yは800を超えると、画面高の900を超え地面を突き抜けてしまう
+        if(@player.y > 800.0)
+            ; yをリセットし、プレイヤーを地面に定着させる
+            ; プレイヤーの円の半径100を足すと、900になり地面につきます
+            do @player.y :: 800.0
+            do @player.veloY :: 0.0
+        end if
+        
+        ; ゲームパッドの「A」やキーボードの「スペース」などが押されたら
+        if(input@pad(0, %a) = 1 & @player.y = 800.0)
+            ; プレイヤーにマイナスの速度(重力)を与えてジャンプさせる
+            do @player.veloY :: -20.0
+        end if
+        
+        ; プレイヤーキャラクターの描画
+        do draw@circle(@player.x, @player.y, 50.0, 50.0, 0xFFFFFF00)
+        
+        do draw@render(60)
+    end while
+end func
