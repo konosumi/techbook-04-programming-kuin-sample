@@ -1,0 +1,21 @@
+{ ⽩い円を描画して、その上に透明度のある⾚い円を少しずらして重ねる }
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    
+    while(wnd@act())
+        ; 白い円を描画する
+        do draw@circle(400.0, 600.0, 50.0, 50.0, draw@white)
+        ; 透明度が「AA」である赤い円を描画する
+        do draw@circle(420.0, 620.0, 40.0, 40.0, 0xAAFF0000)
+
+        do draw@render(60)
+    end while
+end func
+
