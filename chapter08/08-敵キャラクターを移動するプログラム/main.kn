@@ -1,0 +1,46 @@
+{ 敵キャラクターを移動するプログラム }
+
+class Pos()
+    +var x: float
+    +var y: float
+    +var veloX: float
+    +var veloY: float
+end class
+
+var enemy: @Pos
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    do @enemy :: #@Pos
+    ; 敵キャラクターの初期位置
+    do @enemy.x :: 1500.0
+    do @enemy.y :: 800.0
+    ; 1フレーム毎に左に10移動する(つまり移動速度のこと)
+    do @enemy.veloX :: -10.0
+    
+    while(wnd@act())
+        ; 敵キャラクターを動かす
+        ; veloXはマイナスの値なので、Xが減り左に移動します
+        do @enemy.x :+ @enemy.veloX
+        
+        ; もしも敵キャラクターが左端(左側の画面外)まで到達したら
+        if(@enemy.x < -40.0)
+            ; 右端(右側の画面外)に敵キャラクターを移動した上で
+            do @enemy.x :: 1640.0
+            ; 敵キャラクターの移動速度を6～50の間でランダムに変更する
+            do @enemy.veloX :: -lib@rndFloat(6.0, 50.0)
+        end if
+        
+        ; 移動した位置に敵キャラクターを描画する
+        do draw@circle(@enemy.x, @enemy.y, 40.0, 40.0, 0xFFFF0000)
+        
+        ; 60FPSなので、敵キャラクターは1秒間に約60回移動します
+        ; 具体的には「while(wnd@act())」が約60回実行されます
+        do draw@render(60)
+    end while
+end func
