@@ -1,10 +1,9 @@
 { 簡単なミニゲーム }
-
 class Pos()
-    +var x: float
-    +var y: float
-    +var veloX: float
-    +var veloY: float
+	+var x: float
+	+var y: float
+	+var veloX: float
+	+var veloY: float
 end class
 
 var player: @Pos
@@ -13,53 +12,72 @@ var wndMain: wnd@Wnd
 var drawMain: wnd@Draw
 
 func main()
-    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
-    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
-    |1600, 900, %scale, %scale, false)
-    
-    do @player :: #@Pos
-    do @player.x :: 400.0
-    do @player.y :: 800.0
-
-    do @enemy :: #@Pos
-    do @enemy.x :: 1500.0
-    do @enemy.y :: 800.0
-    do @enemy.veloX :: -10.0
-    
-    while(wnd@act())
-        if(lib@dist(@enemy.x, @enemy.y,
-        |@player.x, @player.y) < 50.0 + 40.0)
-            do draw@rect(0.0, 0.0, 1600.0, 900.0, 0xFFCC3333)
-            do draw@circle(@player.x, @player.y,
-            |50.0, 50.0, 0xFFFFFF00)
-            do draw@circle(@enemy.x, @enemy.y,
-            |40.0, 40.0, 0xFFFF0000)
-
-            do draw@render(0)
-            do lib@sleep(800)
-            do @wndMain.close()
-        end if
-        
-        do @enemy.x :+ @enemy.veloX
-        if(@enemy.x < -40.0)
-            do @enemy.x :: 1640.0
-            do @enemy.veloX :: -lib@rndFloat(6.0, 50.0)
-        end if
-        
-        do @player.veloY :+ 1.0
-        do @player.y :+ @player.veloY
-        if(@player.y > 800.0)
-            do @player.y :: 800.0
-            do @player.veloY :: 0.0
-        end if
-        
-        if(input@pad(0, %a) = 1 & @player.y = 800.0)
-            do @player.veloY :: -20.0
-        end if
-        
-        do draw@circle(@player.x, @player.y, 50.0, 50.0, 0xFFFFFF00)
-        do draw@circle(@enemy.x, @enemy.y, 40.0, 40.0, 0xFFFF0000)
-        
-        do draw@render(60)
-    end while
+	; メインウインドウの作成
+	do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+	; グラフィックの描画用です
+	do @drawMain :: wnd@makeDraw(@wndMain, 0, 0, 1600, 900, %scale, %scale, false)
+	
+	; #クラス名で、そのクラスの実体が作成されます
+	do @player :: #@Pos
+	; それぞれX座標、Y座標を入れ、
+	; .veloX, .veloYに横方向の速度、縦方向の速度を入れます
+	do @player.x :: 400.0
+	do @player.y :: 800.0
+	do @enemy :: #@Pos
+	do @enemy.x :: 1500.0
+	do @enemy.y :: 800.0
+	do @enemy.veloX :: -10.0
+	
+	while(wnd@act())
+		; lib@distは、2点間の距離を求めます
+		; 敵とプレイヤーの距離を求め、敵とプレイヤーの半径の和より小さければ
+		; 両者は近づきすぎて衝突しています。
+		if(lib@dist(@enemy.x, @enemy.y, @player.x, @player.y) < 50.0 + 40.0)
+			; draw@rectで背景を赤く塗りつぶします
+			do draw@rect(0.0, 0.0, 1600.0, 900.0, 0xFFCC3333)
+			; プレイヤーと敵の動きを止めます
+			do draw@circle(@player.x, @player.y, 50.0, 50.0, 0xFFFFFF00)
+			do draw@circle(@enemy.x, @enemy.y, 40.0, 40.0, 0xFFFF0000)
+			do draw@render(0)
+			
+			; lib@sleep待ったのち@wndMain.closeで終了します
+			do lib@sleep(800)
+			do @wndMain.close()
+		end if
+		
+		; @enemy.x :: @enemy.x + @enemy.veloXの略記です
+		do @enemy.x :+ @enemy.veloX
+		; 画面の左端に消えたら右端に戻します
+		if(@enemy.x < -40.0)
+			do @enemy.x :: 1640.0
+			; lib@rndFloatは小数の乱数を返す関数です
+			do @enemy.veloX :: -lib@rndFloat(6.0, 50.0)
+		end if
+		
+		; @player.veloYに下向きの加速度を与えます
+		do @player.veloY :+ 1.0
+		; プレイヤーには重力が加わり下向きに落下していきます。
+		do @player.y :+ @player.veloY
+		; プレイヤーが地面より下に貫通しないように接地させます
+		if(@player.y > 800.0)
+			do @player.y :: 800.0
+			do @player.veloY :: 0.0
+		end if
+		
+		; input@pad(0, %a)は、ゲームパッドのAが押されると1が返り押され続けると2以上が返ります
+		; ゲームパッドのAは、初期設定でキーボードのZやスペースにも割当られています。
+		if(input@pad(0, %a) = 1 & @player.y = 800.0)
+			do @player.veloY :: -20.0
+		end if
+		
+		; draw@circleを使い、プレイヤーと敵を円で描画します
+		; "円の中心のX座標", "円の中心のY座標", "半径X", "半径Y", "色"
+		; 色は16進数で指定します。0x不透明度赤緑青(加法混色)で書きます。 
+		do draw@circle(@player.x, @player.y, 50.0, 50.0, 0xFFFFFF00)
+		do draw@circle(@enemy.x, @enemy.y, 40.0, 40.0, 0xFFFF0000)
+		
+		; ドローコントロールへの描画は、バックバッファという目に見えない領域に描画されます
+		; 最後にdraw@renderで描画結果を画面に転送します
+		do draw@render(60)
+	end while
 end func
