@@ -1,0 +1,25 @@
+{ 背景を表示するプログラム }
+
+var wndMain: wnd@Wnd
+var drawMain: wnd@Draw
+; [追加]背景のテクスチャを保持する
+var texBack: draw@Tex
+
+func main()
+    do @wndMain :: wnd@makeWnd(null, %aspect, 1600, 900, "Title")
+    do @drawMain :: wnd@makeDraw(@wndMain, 0, 0,
+    |1600, 900, %scale, %scale, false)
+    
+    ; [追加]背景画像ファイルを読み込んでテクスチャを作成する
+    do @texBack :: draw@makeTex("res/dot_back_side.png")
+    ; [追加]画像を引き伸ばした(伸縮)ときの補間方法の指定
+    do draw@sampler(%point)
+    
+    while(wnd@act())
+        ; [追加]背景を描画する
+        do @texBack.drawScale(0.0, 0.0, 1600.0, 900.0,
+        |0.0, 0.0, 800.0, 450.0, draw@white)
+        
+        do draw@render(60)
+    end while
+end func
